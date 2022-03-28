@@ -12,6 +12,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -28,6 +30,7 @@ public class Catalog {
 	private long catalogId;
 	@Column(name="Catalog_Name",nullable = false,length = 100)
 	private String catalogName;
-    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)    
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY) 
+    @JsonIgnore
 	private List<Product> productList;
 }
