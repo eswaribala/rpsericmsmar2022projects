@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.eric.inventoryservice.models.Catalog;
 import com.eric.inventoryservice.services.CatalogService;
+import com.google.gson.Gson;
 
 @RestController
 @RequestMapping("/catalogs")
@@ -21,13 +22,15 @@ public class CatalogController {
     @Autowired
 	private CatalogService catalogService;
     
+    private  Gson gson;
     //add category
     //http://localhost:7070/catalogs/v1.0
     @PostMapping({"/v1.0"})
-    public ResponseEntity<?> saveCatalog(@RequestBody Catalog catalog){
+    public ResponseEntity<String> saveCatalog(@RequestBody Catalog catalog){
     	Catalog catalogObj=this.catalogService.addCatalog(catalog);
+    	gson=new Gson();
     	if(catalogObj!=null) 
-    		return ResponseEntity.status(HttpStatus.CREATED).body(catalogObj);
+    		return ResponseEntity.status(HttpStatus.CREATED).body(gson.toJson(catalogObj));
     	else
     		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Catalog not created");	
     	}
@@ -42,11 +45,12 @@ public class CatalogController {
     
     //select by id
     @GetMapping({"/v1.0/{catalogId}"})
-    public ResponseEntity<?> getCatalogById(@PathVariable("catalogId") long catalogId) {
-    	 
+    public ResponseEntity<String> getCatalogById(@PathVariable("catalogId") long catalogId) {
+    	gson=new Gson();
     	Catalog catalogObj=this.catalogService.getCatalogById(catalogId);
     	if(catalogObj!=null) {
-    		return ResponseEntity.status(HttpStatus.CREATED).body(catalogObj);
+    		
+    		return ResponseEntity.status(HttpStatus.CREATED).body(gson.toJson(catalogObj));
     	}
     	else
     	{
