@@ -38,5 +38,12 @@ public class CatalogService {
 		return status;
 		
 	}
+	//update
+	public Catalog updateCatalog(long catalogId, String catalogName) {
+	    Catalog catalog=this.getCatalogById(catalogId);
+	    catalog.setCatalogName(catalogName);
+	   return this.catalogRepository.save(catalog);
+	}
+	
 	
 }
