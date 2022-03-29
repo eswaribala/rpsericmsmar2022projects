@@ -60,7 +60,7 @@ public class CatalogController {
     	}
     }
     
-    @DeleteMapping({"/v1.0"})
+    @DeleteMapping({"/v1.0/{catalogId}"})
     public ResponseEntity<String> deleteCatalogById(@PathVariable("catalogId") long catalogId) {
     	
     	boolean status=this.catalogService.deleteCatalog(catalogId);
