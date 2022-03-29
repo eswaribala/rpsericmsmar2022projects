@@ -73,6 +73,20 @@ public class CatalogController {
     		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Catalog not found");	
     	}
     }
+    @DeleteMapping({"/v1.0/filter/{catalogName}"})
+    public ResponseEntity<String> deleteCatalogByName(@PathVariable("catalogName") String catalogName) {
+    	
+    	boolean status=this.catalogService.deleteCatalogByName(catalogName);
+    	if(status) {
+    		
+    		return ResponseEntity.status(HttpStatus.ACCEPTED).body("Catalog Deleted");
+    	}
+    	else
+    	{
+    		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Catalog not found");	
+    	}
+    }
+    
     @PutMapping({"/v1.0/{catalogId}/{catalogName}"})
     public ResponseEntity<String> updateCatalog(@PathVariable("catalogId") long catalogId,
     		@PathVariable("catalogName") String catalogName){

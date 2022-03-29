@@ -38,6 +38,17 @@ public class CatalogService {
 		return status;
 		
 	}
+	
+	public boolean deleteCatalogByName(String catalogName) {
+		boolean status=false;
+		this.catalogRepository.deleteByCatalogName(catalogName);
+		List<Catalog> catalogs=this.catalogRepository.findByCatalogName(catalogName);
+		long count=catalogs.stream().filter(c->c.getCatalogName().equals(catalogName)).count();
+		if(count==0)
+			status=true;
+		return status;
+		
+	}
 	//update
 	public Catalog updateCatalog(long catalogId, String catalogName) {
 	    Catalog catalog=this.getCatalogById(catalogId);
