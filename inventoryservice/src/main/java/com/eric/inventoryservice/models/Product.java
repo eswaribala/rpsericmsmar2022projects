@@ -33,7 +33,7 @@ public class Product {
 	@Enumerated(EnumType.STRING)
 	@Column(name="Product_Type")
 	private ProductType productType;
-	@ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+	@ManyToOne(cascade = CascadeType.MERGE,fetch = FetchType.LAZY)
 	@JoinColumn(foreignKey = @ForeignKey(name = "Catalog_Id"), 
 	name = "Catalog_Id")
 	private Catalog catalog;
