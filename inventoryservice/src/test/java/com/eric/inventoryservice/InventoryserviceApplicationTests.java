@@ -17,13 +17,14 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureTestEnti
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
 
 import com.eric.inventoryservice.models.Catalog;
 import com.eric.inventoryservice.repositories.CatalogRepository;
 
 @SpringBootTest
 @AutoConfigureTestEntityManager
-
+@Rollback(false)
 class InventoryserviceApplicationTests {
     @Autowired
 	private TestEntityManager entityManager;
