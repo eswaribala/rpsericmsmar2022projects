@@ -1,13 +1,75 @@
 package com.eric.inventoryservice;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvFileSource;
+import org.junit.jupiter.params.provider.ValueSource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureTestEntityManager;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import com.eric.inventoryservice.models.Catalog;
+import com.eric.inventoryservice.repositories.CatalogRepository;
+
 @SpringBootTest
+@AutoConfigureTestEntityManager
 class InventoryserviceApplicationTests {
-
-	@Test
-	void contextLoads() {
+    @Autowired
+	private TestEntityManager entityManager;
+	@Autowired
+    private CatalogRepository catalogRepository;
+    private static Catalog catalog;
+	
+	
+	
+	@BeforeAll
+	public static void createInstance() {
+		catalog=new Catalog();
 	}
-
+	
+	@Test
+	@RepeatedTest(5)
+	@DisplayName("Catalog Null or Not")
+	public void testCatalogNullorNot() {
+		
+		assertNotNull(catalog);
+	}
+	
+    @ParameterizedTest
+    @ValueSource(strings = {"Electronics","Furniture","Jewellery","Cosmetics"})
+	public void testCatalogNameLengthLessthan100(String name) {
+		catalog.setCatalogName(name);
+    	assertTrue(catalog.getCatalogName().length()<100);
+	}
+	
+    @ParameterizedTest
+    @CsvFileSource(resources ="./Catalog.csv",numLinesToSkip = 1 )
+    @DisplayName("CSV Test")
+	public void testCatalogNameLengthLessthan100UsingCSV(long id,String name) {
+    	catalog.setCatalogId(id);
+		catalog.setCatalogName(name);
+		assertTrue(catalog.getCatalogId()>0);
+    	assertTrue(catalog.getCatalogName().length()<100);
+	}
+    
+    
+    @ParameterizedTest
+    @CsvFileSource(resources ="./Catalog.csv",numLinesToSkip = 1 )
+    @DisplayName("CSV Test")
+	public void testCatalogPersistenceUsingCSV(long id,String name) {
+    	catalog.setCatalogId(id);
+		catalog.setCatalogName(name);
+		entityManager.persist(catalog);
+		entityManager.flush();
+		assertTrue(this.catalogRepository.findById(102L)!=null);
+	}
+    
+	
 }
