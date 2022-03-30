@@ -14,6 +14,7 @@ import org.junit.jupiter.params.provider.CsvFileSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureTestEntityManager;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -22,6 +23,7 @@ import com.eric.inventoryservice.repositories.CatalogRepository;
 
 @SpringBootTest
 @AutoConfigureTestEntityManager
+
 class InventoryserviceApplicationTests {
     @Autowired
 	private TestEntityManager entityManager;
@@ -61,15 +63,16 @@ class InventoryserviceApplicationTests {
     	assertTrue(catalog.getCatalogName().length()<100);
 	}
     
-    
+    //pending
     @ParameterizedTest
     @CsvFileSource(resources ="./Catalog.csv",numLinesToSkip = 1 )
-    @DisplayName("CSV Test")
+    @DisplayName("Persist CSV Data Test")
     @Transactional
 	public void testCatalogPersistenceUsingCSV(long id,String name) {
-    	catalog.setCatalogId(id);
-		catalog.setCatalogName(name);
-		entityManager.persist(catalog);
+    	//catalog.setCatalogId(id);
+    	Catalog catalogObj=new Catalog();
+		catalogObj.setCatalogName(name);
+		entityManager.persist(catalogObj);
 		entityManager.flush();
 		assertTrue(this.catalogRepository.findById(102L)!=null);
 	}
