@@ -3,6 +3,8 @@ package com.eric.inventoryservice;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import javax.transaction.Transactional;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.RepeatedTest;
@@ -63,6 +65,7 @@ class InventoryserviceApplicationTests {
     @ParameterizedTest
     @CsvFileSource(resources ="./Catalog.csv",numLinesToSkip = 1 )
     @DisplayName("CSV Test")
+    @Transactional
 	public void testCatalogPersistenceUsingCSV(long id,String name) {
     	catalog.setCatalogId(id);
 		catalog.setCatalogName(name);
