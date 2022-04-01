@@ -3,6 +3,8 @@ package com.eric.inventoryservice.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,12 +20,17 @@ import com.eric.inventoryservice.models.Catalog;
 import com.eric.inventoryservice.services.CatalogService;
 import com.google.gson.Gson;
 
+import lombok.extern.slf4j.Slf4j;
+
 @RestController
 @RequestMapping("/catalogs")
+@RefreshScope
+@Slf4j
 public class CatalogController {
     @Autowired
 	private CatalogService catalogService;
-    
+    @Value("${message}")
+    private String message;
     private  Gson gson;
     //add category
     //http://localhost:7070/catalogs/v1.0
@@ -41,6 +48,7 @@ public class CatalogController {
     //select all
     @GetMapping({"/v1.0"})
     public List<Catalog> getAllCatalogs(){
+    	log.info(message);
     	return this.catalogService.getAllCatalogs();
     }
     
