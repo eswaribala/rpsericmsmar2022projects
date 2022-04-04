@@ -13,8 +13,17 @@ import javax.persistence.Table;
 
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 @Entity
-@Table(name="VS_Roles")
+@Table(name="ES_Roles")
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Role  {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,36 +36,9 @@ public class Role  {
 	 @ManyToMany(mappedBy = "roles")
 	    private List<User> users;
 	 
-	 public Role() {
-	    }
-
+	
 	    public Role(String role) {
 	        this.roleName = role;
 	    }
 	
-
-	public String getRoleName() {
-			return roleName;
-		}
-
-		public void setRoleName(String roleName) {
-			this.roleName = roleName;
-		}
-
-	public long getRoleId() {
-		return roleId;
-	}
-
-	public void setRoleId(long roleId) {
-		this.roleId = roleId;
-	}
-
-	public List<User> getUsers() {
-		return users;
-	}
-
-	public void setUsers(List<User> users) {
-		this.users = users;
-	}
-
 }
