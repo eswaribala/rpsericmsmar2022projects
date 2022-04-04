@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,6 +35,7 @@ public class CatalogController {
     private  Gson gson;
     //add category
     //http://localhost:7070/catalogs/v1.0
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping({"/v1.0"})
     public ResponseEntity<String> saveCatalog(@RequestBody Catalog catalog){
     	Catalog catalogObj=this.catalogService.addCatalog(catalog);
@@ -47,6 +49,7 @@ public class CatalogController {
     
     //select all
     @GetMapping({"/v1.0"})
+    @PreAuthorize("hasRole('ADMIN')")
     public List<Catalog> getAllCatalogs(){
     	log.info(message);
     	return this.catalogService.getAllCatalogs();
@@ -54,6 +57,7 @@ public class CatalogController {
     
     
     //select by id
+    @PreAuthorize("hasRole('USER')")
     @GetMapping({"/v1.0/{catalogId}"})
     public ResponseEntity<String> getCatalogById(@PathVariable("catalogId") long catalogId) {
     	gson=new Gson();
@@ -67,7 +71,7 @@ public class CatalogController {
     		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Catalog not found");	
     	}
     }
-    
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping({"/v1.0/{catalogId}"})
     public ResponseEntity<String> deleteCatalogById(@PathVariable("catalogId") long catalogId) {
     	
@@ -81,6 +85,7 @@ public class CatalogController {
     		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Catalog not found");	
     	}
     }
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping({"/v1.0/filter/{catalogName}"})
     public ResponseEntity<String> deleteCatalogByName(@PathVariable("catalogName") String catalogName) {
     	
@@ -94,7 +99,7 @@ public class CatalogController {
     		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Catalog not found");	
     	}
     }
-    
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping({"/v1.0/{catalogId}/{catalogName}"})
     public ResponseEntity<String> updateCatalog(@PathVariable("catalogId") long catalogId,
     		@PathVariable("catalogName") String catalogName){
