@@ -47,8 +47,8 @@ public class InventorySwaggerConfiguration {
                 .directModelSubstitute(java.time.ZonedDateTime.class, Date.class)
                 .directModelSubstitute(java.time.LocalDateTime.class, Date.class)
                 .securityContexts(Lists.newArrayList(securityContext()))
-                .securitySchemes(Lists.newArrayList(apiKey()))
-                .useDefaultResponseMessages(false);
+                .securitySchemes(Lists.newArrayList(apiKey())).select()
+                .apis(RequestHandlerSelectors.any()).build();
     }
    
     
