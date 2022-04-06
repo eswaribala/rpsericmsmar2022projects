@@ -35,7 +35,7 @@ public class SwaggerConfiguration {
 	                .select()
 	                .apis(RequestHandlerSelectors
 	                        .basePackage("com.eric.orderapi"))
-	                .paths(PathSelectors.any())
+	                .paths(PathSelectors.regex("/orders/v1.0.*"))
 	                .build()
 	                .apiInfo(getApiInfo())
 	                .forCodeGeneration(true)
