@@ -13,12 +13,16 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 public class OrderConsumerService {
+	private Order orderObj;
     @Autowired
 	private PaymentChannel paymentChannel;
     @StreamListener(target = PaymentChannel.inChannel)
     public void consumeOrder(@Payload Order order) {
     	log.info("Order Received {}",order);
-    	
+    	this.orderObj=order;
     }
 	
+    public Order getOrderDetails() {
+    	return this.orderObj;
+    }
 }

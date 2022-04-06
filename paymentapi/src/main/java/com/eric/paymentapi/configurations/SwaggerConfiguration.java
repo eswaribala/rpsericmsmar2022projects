@@ -35,7 +35,7 @@ public class SwaggerConfiguration {
 	                .select()
 	                .apis(RequestHandlerSelectors
 	                        .basePackage("com.eric.paymentapi"))
-	                .paths(PathSelectors.any())
+	                .paths(PathSelectors.regex("/payments/v1.0.*"))
 	                .build()
 	                .apiInfo(getApiInfo())
 	                .forCodeGeneration(true)
