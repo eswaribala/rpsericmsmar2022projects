@@ -24,7 +24,7 @@ public class CBHandler {
     private String serviceUrl;
     @Value("${fallBackUrl}")
     private String fallBackUrl;
-   
+   @Autowired
     private Tracer tracer;
    
        /**
@@ -69,11 +69,15 @@ public class CBHandler {
 		
 	}
 	
-	public ResponseEntity<String> fallbackRequestHandler(JWTRequest  jwtRequest)
+	public ResponseEntity<String> fallbackRequestHandler(JWTRequest  jwtRequest,Span rootSpan)
 	{
 		
-		return restTemplate.exchange(fallBackUrl,HttpMethod.GET,null,String.class);
+		Span span=tracer.buildSpan("fallback  calling api..")
+				.asChildOf(rootSpan).start();
 		
+		ResponseEntity<String> response = restTemplate.exchange(fallBackUrl,HttpMethod.GET,null,String.class);
+		span.finish();
+		return response;
 		
 	}
 
