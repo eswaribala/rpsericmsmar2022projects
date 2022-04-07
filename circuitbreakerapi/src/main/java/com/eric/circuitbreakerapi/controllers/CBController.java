@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.eric.circuitbreakerapi.handlers.CBHandler;
 import com.eric.circuitbreakerapi.vos.JWTRequest;
 
+import io.opentracing.Span;
+import io.opentracing.Tracer;
 
 
 
@@ -16,9 +18,28 @@ import com.eric.circuitbreakerapi.vos.JWTRequest;
 public class CBController {
     @Autowired
 	private CBHandler cbHandler;
+    private Tracer tracer;
+
+    public CBController(Tracer tracer) {
+    	this.tracer=tracer;
+    	
+    }
+    
     
 	@PostMapping("/")
 	public ResponseEntity<?> sendRequest(@RequestBody JWTRequest jwtRequest) {
-		 return this.cbHandler.requestHandler(jwtRequest);
+		Span span = tracer.buildSpan("create cb controller...").start();
+ 
+		ResponseEntity<String> responseEntity=this.cbHandler.
+				requestHandler(jwtRequest,span);
+		if(responseEntity!=null) 
+			span.setTag("http.status_code", 201);
+
+		else
+			span.setTag("http.status_code", 500);
+		
+		span.finish();
+		return responseEntity;
+
 	}
 }

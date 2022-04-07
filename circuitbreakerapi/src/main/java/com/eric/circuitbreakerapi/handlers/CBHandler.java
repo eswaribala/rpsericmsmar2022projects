@@ -11,6 +11,9 @@ import com.eric.circuitbreakerapi.vos.JWTRequest;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 
+import io.opentracing.Span;
+import io.opentracing.Tracer;
+
 
 @Service
 public class CBHandler {
@@ -22,6 +25,7 @@ public class CBHandler {
     @Value("${fallBackUrl}")
     private String fallBackUrl;
    
+    private Tracer tracer;
    
        /**
     @HystrixCommand(commandKey = "GetCustomerCommand", groupKey = "CustomerGroupKey", threadPoolKey = "Test",
@@ -50,15 +54,18 @@ public class CBHandler {
                     @HystrixProperty(name = "queueSizeRejectionThreshold", value = "15"),
                     @HystrixProperty(name = "metrics.rollingStats.timeInMilliseconds", value = "1440")
             })
-	public ResponseEntity<String> requestHandler(JWTRequest  jwtRequest)
+	public ResponseEntity<String> requestHandler(JWTRequest  jwtRequest,Span rootSpan)
 	{
     	
     	//return restTemplate.exchange(serviceUrl+"?userName="+jwtRequest.getUserName()
 		//+"&userPwd="+jwtRequest.getUserPwd(),HttpMethod.GET,null,String.class);
+		Span span=tracer.buildSpan("service  calling gateway...")
+				.asChildOf(rootSpan).start();
 		
-		return restTemplate.exchange(serviceUrl+"?userName="+jwtRequest.getUserName()
+		ResponseEntity<String> response= restTemplate.exchange(serviceUrl+"?userName="+jwtRequest.getUserName()
 		+"&userPwd="+jwtRequest.getPassword(),HttpMethod.GET,null,String.class);
-		
+		span.finish();
+		return response;
 		
 	}
 	
