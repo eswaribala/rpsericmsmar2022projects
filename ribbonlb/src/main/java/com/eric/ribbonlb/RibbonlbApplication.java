@@ -2,10 +2,17 @@ package com.eric.ribbonlb;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
+import org.springframework.cloud.netflix.ribbon.RibbonClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
 
+import com.eric.ribbonlb.configurations.RibbonConfiguration;
+
 @SpringBootApplication
+@RibbonClient(name = "ERIC-RIBBON",configuration = RibbonConfiguration.class)
+@EnableEurekaClient
+
 public class RibbonlbApplication {
 
 	public static void main(String[] args) {

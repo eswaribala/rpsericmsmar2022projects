@@ -1,5 +1,6 @@
 package com.eric.ribbonlb.controllers;
 
+import java.net.URI;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,13 +32,46 @@ public class RibbonController {
     private String serviceId;
 	
     @GetMapping("/")
-    public List<ServiceInstance> accessAPI() {
+    public String accessAPI() {
     	
     	// (Need!!) eureka.client.fetchRegistry=true
         List<ServiceInstance> instances = this.discoveryClient
         		.getInstances(serviceId);
         
-	   return instances;
+        String html = "<h2>Instances for Service Id: " + serviceId + "</h2>";
+        
+        for (ServiceInstance serviceInstance : instances) {
+            html += "<h3>Instance :" + serviceInstance.getUri() + "</h3>";
+        }
+ 
+        
+ 
+        html += "<br><h4>Call /trader of service: " + serviceId + "</h4>";
+ 
+        try {
+            // May be throw IllegalStateException (No instances available)
+        	//will pick up any instance based on algorithm
+            ServiceInstance serviceInstance = this.loadBalancer.choose(serviceId);
+ 
+            html += "<br>===> Load Balancer choose: " + serviceInstance.getUri();
+ 
+            String url = "http://" + serviceInstance.getHost() + ":" + serviceInstance.getPort() + "/catalogs/v1.0";
+ 
+            html += "<br>Make a Call: " + url;
+            html += "<br>";
+ 
+            String result = restTemplate.getForObject(url, String.class);
+ 
+            html += "<br>Result: " + result;
+        } catch (IllegalStateException e) {
+            html += "<br>loadBalancer.choose ERROR: " + e.getMessage();
+            e.printStackTrace();
+        } catch (Exception e) {
+            html += "<br>Other ERROR: " + e.getMessage();
+            e.printStackTrace();
+        }
+        return html;
+
     }
 	
 
